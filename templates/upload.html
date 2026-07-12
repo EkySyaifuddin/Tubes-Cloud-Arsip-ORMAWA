@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="topbar">
+    <div>
+        <div class="page-title">Upload Dokumen</div>
+        <div class="page-subtitle">Arsipkan dokumen ke dalam penyimpanan cloud S3</div>
+    </div>
+</div>
+
+<div style="max-width: 560px;">
+    <div class="card section-card">
+        <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+
+            <!-- Pilih Kategori -->
+            <div class="form-group">
+                <label class="form-label">Kategori Dokumen</label>
+                <div class="select-wrapper">
+                    <select class="form-select" name="category" id="category" required>
+                        <option value="" disabled selected>-- Pilih Kategori --</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Nama Berkas (opsional)</label>
+                <input type="text" name="custom_filename" class="form-control" placeholder="Contoh: Laporan_Kegiatan_2026" maxlength="120">
+                <div class="form-hint">Jika dikosongkan, sistem akan menggunakan nama file asli.</div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="form-group">
+                <label class="form-label">Pilih Berkas</label>
+                <div class="upload-zone" id="uploadZone">
+                    <input type="file" name="document_file" id="document_file" required
+                           accept=".pdf,.docx,.xlsx,.pptx,.jpg,.jpeg,.png,.zip"
+                           onchange="handleFileSelect(this)">
+                    <div class="upload-zone-icon">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                    </div>
+                    <div class="upload-zone-title">Klik untuk pilih file</div>
+                    <div class="upload-zone-sub">atau seret & lepas file ke sini</div>
+                    <div class="upload-file-name" id="fileName"></div>
+                </div>
+                <div class="form-hint danger" style="margin-top: 8px;">
+                    <i class="bi bi-shield-check" style="color: #10b981; margin-right: 4px;"></i>
+                    Format: PDF, DOCX, XLSX, PPTX, JPG, PNG, ZIP &mdash; Maks. 20 MB
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px 0; font-size: 14px;">
+                <i class="bi bi-cloud-arrow-up"></i> Mulai Upload
+            </button>
+        </form>
+    </div>
+
+    <!-- Info Card -->
+    <div class="card section-card" style="margin-top: 16px; background: linear-gradient(135deg, #f8faff, #f0f4ff); border-color: rgba(99,102,241,0.15);">
+        <div class="section-title" style="color: var(--accent); margin-bottom: 12px;">
+            <i class="bi bi-info-circle-fill"></i> Informasi Penting
+        </div>
+        <ul style="font-size: 13px; color: var(--text-muted); padding-left: 18px; line-height: 1.8;">
+            <li>Berkas tersimpan pada cloud S3 lokal berbasis memori.</li>
+            <li>Semua berkas terorganisir secara otomatis berdasarkan kategori.</li>
+            <li>Nama file akan digunakan persis seperti nama aslinya.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+function handleFileSelect(input) {
+    const name = input.files[0]?.name;
+    const el = document.getElementById('fileName');
+    const zone = document.getElementById('uploadZone');
+    if (name) {
+        el.textContent = 'File dipilih: ' + name;
+        el.style.display = 'block';
+        zone.style.borderColor = '#6366f1';
+        zone.style.background = 'rgba(99,102,241,0.04)';
+    }
+}
+
+// Drag & Drop feedback
+const zone = document.getElementById('uploadZone');
+['dragenter','dragover'].forEach(e => zone.addEventListener(e, () => zone.classList.add('dragover')));
+['dragleave','drop'].forEach(e => zone.addEventListener(e, () => zone.classList.remove('dragover')));
+</script>
+
+{% endblock %}

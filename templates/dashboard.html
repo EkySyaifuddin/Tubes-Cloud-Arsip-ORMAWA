@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="topbar">
+    <div>
+        <div class="page-title">Dashboard</div>
+        <div class="page-subtitle">Ringkasan statistik arsip dokumen ORMAWA (Organisasi Mahasiswa)</div>
+    </div>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Upload Dokumen
+    </a>
+</div>
+
+<!-- ── STAT CARDS ──────────────────────────────── -->
+<div class="grid grid-3" style="margin-bottom: 24px;">
+    <div class="card stat-card">
+        <div class="stat-icon indigo"><i class="bi bi-file-earmark-fill"></i></div>
+        <div class="stat-label">Total Dokumen</div>
+        <div class="stat-value">{{ stats.total_documents }}</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-icon emerald"><i class="bi bi-folder-fill"></i></div>
+        <div class="stat-label">Total Kategori</div>
+        <div class="stat-value">{{ stats.total_categories }}</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-icon amber"><i class="bi bi-hdd-network-fill"></i></div>
+        <div class="stat-label">Total Cloud Storage</div>
+        <div class="stat-value" style="font-size: 22px;">{{ stats.total_storage }}</div>
+    </div>
+</div>
+
+<!-- ── BOTTOM SECTION ──────────────────────────── -->
+<div class="grid grid-2">
+
+    <!-- Sebaran Kategori -->
+    <div class="card section-card">
+        <div class="section-title">
+            <i class="bi bi-bar-chart-fill"></i> Sebaran Kategori
+        </div>
+        {% for category, count in stats.category_counts.items() %}
+        <div class="cat-item">
+            <div class="cat-name">
+                <i class="bi bi-folder2"></i>
+                {{ category }}
+            </div>
+            <span class="cat-badge">{{ count }} file</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Dokumen Terbaru -->
+    <div class="card section-card">
+        <div class="section-title">
+            <i class="bi bi-clock-history"></i> 5 Dokumen Terbaru
+        </div>
+
+        {% if stats.recent_documents %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nama File</th>
+                    <th>Kategori</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in stats.recent_documents %}
+                <tr>
+                    <td class="text-truncate" style="max-width: 200px;" title="{{ doc.filename }}">
+                        <i class="bi bi-file-earmark me-1" style="color: #94a3b8;"></i>
+                        {{ doc.filename }}
+                    </td>
+                    <td>
+                        <span class="badge-cat badge-{{ doc.category | lower }}">{{ doc.category }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <h6>Belum ada dokumen</h6>
+            <p>Upload dokumen pertama Anda untuk memulai.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

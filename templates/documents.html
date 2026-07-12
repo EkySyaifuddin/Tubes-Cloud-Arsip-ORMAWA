@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="topbar">
+    <div>
+        <div class="page-title">Daftar Dokumen</div>
+        <div class="page-subtitle">Cari, filter, unduh, dan kelola arsip dokumen</div>
+    </div>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Upload Dokumen
+    </a>
+</div>
+
+<!-- ── FILTER BAR ──────────────────────────────── -->
+<div class="card section-card" style="margin-bottom: 20px;">
+    <form action="{{ url_for('documents') }}" method="GET">
+        <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 200px;">
+                <label class="form-label" style="margin-bottom: 6px;">Cari Dokumen</label>
+                <div class="search-bar">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="form-control" name="search"
+                           placeholder="Nama file..." value="{{ request.args.get('search', '') }}">
+                </div>
+            </div>
+            <div style="min-width: 180px;">
+                <label class="form-label" style="margin-bottom: 6px;">Kategori</label>
+                <div class="select-wrapper">
+                    <select class="form-select" name="category">
+                        <option value="">Semua Kategori</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                    <i class="bi bi-chevron-down"></i>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" style="height: 42px; margin-top: 2px;">
+                    <i class="bi bi-funnel-fill"></i> Filter
+                </button>
+                {% if request.args.get('search') or request.args.get('category') %}
+                <a href="{{ url_for('documents') }}" class="btn" style="height: 42px; margin-top: 2px; background: #f1f5f9; color: #64748b;">
+                    <i class="bi bi-x-lg"></i> Reset
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- ── DOCUMENTS TABLE ─────────────────────────── -->
+<div class="card section-card">
+    {% if files %}
+    <div style="overflow-x: auto;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nama Dokumen</th>
+                    <th>Kategori</th>
+                    <th>Ukuran</th>
+                    <th>Tanggal Upload</th>
+                    <th style="text-align: center;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="bi bi-file-earmark-fill" style="color: #94a3b8; font-size: 15px; flex-shrink: 0;"></i>
+                            <span class="text-truncate fw-medium" style="max-width: 280px;" title="{{ file.filename }}">
+                                {{ file.filename }}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-cat badge-{{ file.category | lower }}">{{ file.category }}</span>
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 13px;">
+                        {{ (file.size / 1024) | round(1) }} KB
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 13px;">
+                        {{ file.last_modified.strftime('%d %b %Y, %H:%M') }}
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            <a href="{{ url_for('download', s3_key=file.key) }}" class="btn btn-success btn-sm">
+                                <i class="bi bi-download"></i> Unduh
+                            </a>
+                            <a href="{{ url_for('edit', s3_key=file.key) }}" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <form action="{{ url_for('delete', s3_key=file.key) }}" method="POST"
+                                  onsubmit="return confirm('Hapus dokumen \'{{ file.filename }}\' dari cloud?');">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash3"></i> Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 14px; font-size: 12px; color: var(--text-muted);">
+        Menampilkan <strong>{{ files | length }}</strong> dokumen
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-folder2-open"></i>
+        <h6>Tidak ada dokumen ditemukan</h6>
+        <p>Coba ubah kata kunci pencarian atau filter, atau upload dokumen baru.</p>
+        <a href="{{ url_for('upload') }}" class="btn btn-primary" style="margin-top: 16px;">
+            <i class="bi bi-plus-lg"></i> Upload Sekarang
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
