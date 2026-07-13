@@ -4,17 +4,17 @@
 <div class="topbar">
     <div>
         <div class="page-title">Upload Dokumen</div>
-        <div class="page-subtitle">Arsipkan dokumen ke dalam penyimpanan cloud S3</div>
+        <div class="page-subtitle">Arsipkan dokumen ke dalam penyimpanan cloud S3 dengan mudah</div>
     </div>
 </div>
 
-<div style="max-width: 560px;">
+<div style="max-width: 600px; margin: 0 auto;">
     <div class="card section-card">
         <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
 
             <!-- Pilih Kategori -->
             <div class="form-group">
-                <label class="form-label">Kategori Dokumen</label>
+                <label class="form-label"><i class="bi bi-folder-plus" style="margin-right: 6px;"></i>Kategori Dokumen</label>
                 <div class="select-wrapper">
                     <select class="form-select" name="category" id="category" required>
                         <option value="" disabled selected>-- Pilih Kategori --</option>
@@ -27,14 +27,14 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">Nama Berkas (opsional)</label>
+                <label class="form-label"><i class="bi bi-pencil-square" style="margin-right: 6px;"></i>Nama Berkas (opsional)</label>
                 <input type="text" name="custom_filename" class="form-control" placeholder="Contoh: Laporan_Kegiatan_2026" maxlength="120">
                 <div class="form-hint">Jika dikosongkan, sistem akan menggunakan nama file asli.</div>
             </div>
 
             <!-- Upload Zone -->
             <div class="form-group">
-                <label class="form-label">Pilih Berkas</label>
+                <label class="form-label"><i class="bi bi-cloud-arrow-up" style="margin-right: 6px;"></i>Pilih Berkas</label>
                 <div class="upload-zone" id="uploadZone">
                     <input type="file" name="document_file" id="document_file" required
                            accept=".pdf,.docx,.xlsx,.pptx,.jpg,.jpeg,.png,.zip"
@@ -46,28 +46,29 @@
                     <div class="upload-zone-sub">atau seret & lepas file ke sini</div>
                     <div class="upload-file-name" id="fileName"></div>
                 </div>
-                <div class="form-hint danger" style="margin-top: 8px;">
+                <div class="form-hint danger" style="margin-top: 10px;">
                     <i class="bi bi-shield-check" style="color: #10b981; margin-right: 4px;"></i>
                     Format: PDF, DOCX, XLSX, PPTX, JPG, PNG, ZIP &mdash; Maks. 20 MB
                 </div>
             </div>
 
             <!-- Submit -->
-            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px 0; font-size: 14px;">
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px 0; font-size: 14px; margin-top: 8px;">
                 <i class="bi bi-cloud-arrow-up"></i> Mulai Upload
             </button>
         </form>
     </div>
 
     <!-- Info Card -->
-    <div class="card section-card" style="margin-top: 16px; background: linear-gradient(135deg, #f8faff, #f0f4ff); border-color: rgba(99,102,241,0.15);">
-        <div class="section-title" style="color: var(--accent); margin-bottom: 12px;">
+    <div class="card section-card" style="margin-top: 20px; margin-left: auto; margin-right: auto; max-width: 600px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(99, 102, 241, 0.06)); border-color: rgba(99,102,241,0.3); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent); border-radius: 50%; pointer-events: none;"></div>
+        <div class="section-title" style="color: #818cf8; margin-bottom: 16px; position: relative; z-index: 1;">
             <i class="bi bi-info-circle-fill"></i> Informasi Penting
         </div>
-        <ul style="font-size: 13px; color: var(--text-muted); padding-left: 18px; line-height: 1.8;">
-            <li>Berkas tersimpan pada cloud S3 lokal berbasis memori.</li>
-            <li>Semua berkas terorganisir secara otomatis berdasarkan kategori.</li>
-            <li>Nama file akan digunakan persis seperti nama aslinya.</li>
+        <ul style="font-size: 13px; color: #cbd5e1; padding-left: 20px; line-height: 2; position: relative; z-index: 1; font-weight: 500;">
+            <li><strong style="color: #e2e8f0;">Penyimpanan Cloud</strong>: Berkas tersimpan pada cloud S3 lokal berbasis memori.</li>
+            <li><strong style="color: #e2e8f0;">Organisasi Otomatis</strong>: Semua berkas terorganisir secara otomatis berdasarkan kategori.</li>
+            <li><strong style="color: #e2e8f0;">Nama File</strong>: Nama file akan digunakan persis seperti nama aslinya atau custom name.</li>
         </ul>
     </div>
 </div>
@@ -78,10 +79,10 @@ function handleFileSelect(input) {
     const el = document.getElementById('fileName');
     const zone = document.getElementById('uploadZone');
     if (name) {
-        el.textContent = 'File dipilih: ' + name;
+        el.textContent = '✓ File dipilih: ' + name;
         el.style.display = 'block';
         zone.style.borderColor = '#6366f1';
-        zone.style.background = 'rgba(99,102,241,0.04)';
+        zone.style.background = 'rgba(99,102,241,0.05)';
     }
 }
 

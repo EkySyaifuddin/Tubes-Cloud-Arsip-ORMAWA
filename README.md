@@ -25,22 +25,27 @@ Aplikasi ini cocok untuk pengembangan dan pembelajaran arsitektur cloud storage 
 Arsip ORMAWA menyediakan antarmuka web untuk mengunggah, mengelola, dan mengunduh dokumen organisasi. Semua data file disimpan dalam simulasi **S3 lokal** menggunakan `moto`.
 
 Aplikasi mendukung:
-- Upload dokumen dengan nama kustom.
-- Edit metadata dokumen dan ganti isi file.
-- Download dokumen dari browser.
-- Hapus dokumen.
-- Sidebar yang bisa disembunyikan/ditampilkan.
-- Filtering dan pencarian dokumen berdasarkan nama atau kategori.
+- **Upload dokumen** dengan nama kustom dan kategori pilihan.
+- **Edit metadata dokumen** dan ganti isi file.
+- **Download dokumen** dari browser dengan mudah.
+- **Hapus dokumen** yang tidak diperlukan.
+- **Sidebar toggle**: Klik logo untuk membuka/menutup sidebar dan tampil lebih luas.
+- **Filtering dan pencarian** dokumen berdasarkan nama atau kategori.
+- **Dark theme elegans** dengan latar belakang pola jaringan organisasi yang animatif.
+- **Dashboard ringkasan** dengan hero banner dan stat cards yang informatif.
 
 ---
 
 ## ✅ Fitur Utama
 
-- **Dashboard Ringkasan**: Total dokumen, total kategori, ukuran penyimpanan, dan daftar dokumen terbaru.
-- **Upload Dokumen**: Unggah file dengan kategori dan nama file pilihan.
-- **Edit Dokumen**: Perbarui nama, kategori, dan/atau ganti isi file.
+- **Dashboard Ringkasan**: Hero banner dengan statistik total dokumen, total kategori, dan ukuran penyimpanan. Tampilkan daftar dokumen terbaru.
+- **Upload Dokumen**: Unggah file dengan kategori dan nama file pilihan (drag-drop support).
+- **Edit Dokumen**: Perbarui nama, kategori, dan/atau ganti isi file dengan mudah.
 - **File Replacement**: Saat mengganti dokumen, nama file baru tanpa ekstensi otomatis menggunakan ekstensi file lama.
-- **Hide / Unhide Sidebar**: Sidebar dapat disembunyikan untuk tampilan lebih luas.
+- **Sidebar Toggle**: Klik logo untuk membuka/menutup sidebar. State tersimpan di localStorage untuk pengalaman pengguna yang lebih baik.
+- **Dark Theme Elegan**: Desain modern dengan tema gelap yang indah, pola jaringan organisasi beranimasi, dan efek glassmorphic.
+- **Responsive Design**: Tampilan sempurna di desktop dan mobile dengan layout yang fleksibel.
+- **Form Centered**: Form upload dan edit ditampilkan di tengah halaman untuk fokus pengguna yang lebih baik.
 - **Validasi Ekstensi**: Hanya menerima `.pdf`, `.docx`, `.xlsx`, `.pptx`, `.jpg`, `.jpeg`, `.png`, `.zip`.
 
 ---
@@ -48,15 +53,30 @@ Aplikasi mendukung:
 ## 🏗️ Arsitektur & Teknologi
 
 Aplikasi ini terdiri dari:
-- **Flask** sebagai backend web.
-- **moto** sebagai simulator AWS S3 lokal.
-- **Boto3** sebagai client AWS S3.
-- **Jinja2** untuk templates HTML.
-- **Bootstrap** untuk layout dan styling UI.
+- **Flask** sebagai backend web dengan routing dan session management.
+- **moto** sebagai simulator AWS S3 lokal tanpa memerlukan akun AWS.
+- **Boto3** sebagai client AWS S3 untuk operasi penyimpanan.
+- **Jinja2** untuk templates HTML dengan inheritance dan block extension.
+- **HTML5 + CSS3** dengan custom properties untuk dark theme, animasi, dan responsivitas.
+- **Bootstrap Icons v1.11.0** untuk ikon modern dan konsisten.
+- **SVG Patterns** untuk latar belakang jaringan organisasi yang animatif.
 
-### Arsitektur Sederhana
+### Arsitektur Aplikasi
 
-Browser → Flask (`app.py`) → Service S3 lokal (`services/s3_service.py`) → moto S3 mock
+```
+Browser 
+  → Flask Routes (app.py)
+    → S3 Service Layer (services/s3_service.py)
+      → moto S3 Mock (In-Memory Storage)
+```
+
+### Design System
+
+Aplikasi menggunakan CSS custom properties untuk konsistensi visual:
+- **Color Palette**: Indigo (#6366f1), Purple (#8b5cf6), Emerald (#10b981) dengan background gelap
+- **Animations**: Cubic-bezier timing functions dan keyframe animations untuk smooth transitions
+- **Layout**: CSS Grid dan Flexbox untuk responsive design
+- **Effects**: Glassmorphism, gradient backgrounds, dan layered shadows
 
 ---
 
@@ -193,13 +213,25 @@ Tubes-Cloud ( Arsip ORMAWA )/
 
 ## 🛠️ Cara Menggunakan
 
-1. Login menggunakan kredensial di `.env`.
-2. Buka halaman **Upload** untuk menambahkan dokumen.
-3. Gunakan halaman **Documents** untuk mencari, mengunduh, mengedit, atau menghapus file.
-4. Pada halaman **Edit**, Anda bisa:
-   - mengubah nama file tanpa menulis ekstensi,
-   - merubah kategori,
-   - mengganti file fisiknya.
+1. **Login**: Gunakan kredensial di `.env` untuk masuk ke sistem.
+2. **Dashboard**: Lihat ringkasan statistik dokumen dan akses dokumen terbaru.
+3. **Toggle Sidebar**: Klik logo di sudut kiri atas untuk membuka/menutup sidebar. Posisi tersimpan otomatis.
+4. **Upload Dokumen**: 
+   - Buka halaman **Upload Dokumen**
+   - Pilih kategori dari dropdown
+   - Drag-drop atau klik untuk memilih file
+   - Masukkan nama custom (opsional)
+   - Klik "Mulai Upload"
+5. **Kelola Dokumen**: Gunakan halaman **Daftar Dokumen** untuk:
+   - 🔍 Cari dokumen berdasarkan nama
+   - 📁 Filter berdasarkan kategori
+   - 📥 Download file
+   - ✏️ Edit nama, kategori, atau ganti file
+   - 🗑️ Hapus dokumen
+6. **Edit Dokumen**: Pada halaman **Edit**, Anda bisa:
+   - Mengubah nama file tanpa menulis ekstensi,
+   - Merubah kategori,
+   - Mengganti file fisiknya.
 
 ---
 
@@ -213,6 +245,43 @@ Tubes-Cloud ( Arsip ORMAWA )/
 
 ## 📌 Catatan Penting
 
-- Aplikasi ini menggunakan **moto** untuk memmock layanan AWS S3 secara lokal.
-- Data dokumen hanya tersedia selama proses Flask berjalan dan tidak tersimpan di AWS asli.
-- Fitur `file edit` sudah diperbarui untuk memungkinkan nama baru tanpa ekstensi dan mengganti isi file bila diunggah ulang.
+- Aplikasi ini menggunakan **moto** untuk memmock layanan AWS S3 secara lokal tanpa perlu akun AWS.
+- Data dokumen hanya tersedia selama proses Flask berjalan dan tidak tersimpan di AWS asil.
+- **Fitur Sidebar Toggle**: Posisi sidebar (buka/tutup) tersimpan di browser menggunakan localStorage, sehingga preferensi user teringat.
+- **Dark Theme**: Aplikasi menggunakan dark theme dengan pola jaringan organisasi beranimasi untuk estetika modern.
+- **Responsive Design**: Semua halaman responsif dan optimal di berbagai ukuran layar (desktop, tablet, mobile).
+- **Form Centered**: Form upload dan edit ditampilkan terpusat untuk pengalaman pengguna yang lebih fokus dan elegan.
+- **Logo Interaktif**: Saat sidebar collapsed, klik logo untuk toggle sidebar kembali (no hamburger button visible).
+
+---
+
+## 🎨 Peningkatan UI/UX
+
+Aplikasi telah didesain ulang dengan fokus pada estetika dan user experience:
+
+### Dark Theme Modern
+- Background gelap (#0f172a) dengan gradient subtle untuk mengurangi kelelahan mata
+- Text warna terang (#f1f5f9) untuk kontras optimal
+- Accent colors: Indigo, Purple, Emerald untuk visual hierarchy
+
+### Animasi & Transisi Smooth
+- Cubic-bezier timing function untuk transisi natural
+- 20-second drift animation untuk latar belakang pola jaringan
+- Hover effects dengan scale dan shadow transforms
+- Slide-down animation untuk alerts
+
+### Responsive Layout
+- Sidebar collapsible: 260px (expanded) → 60px (collapsed)
+- Grid layout adaptive untuk desktop dan mobile
+- Breakpoint 768px untuk tablet/mobile
+
+### Fitur Accessibility
+- Custom scrollbar dengan accent color
+- Form labels dengan icon untuk clarity
+- Color-coded badges untuk berbagai kategori dokumen
+- Focus states dengan glow effect pada input fields
+
+### Organizational Branding
+- SVG pattern dengan jaringan organisasi (nodes dan connections)
+- Hero banner di dashboard dengan organizational icons (👥 📊 🎯 📱)
+- Consistent color scheme yang mencerminkan profesionalisme ORMAWA

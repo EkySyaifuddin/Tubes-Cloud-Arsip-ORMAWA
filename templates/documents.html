@@ -14,17 +14,17 @@
 <!-- ── FILTER BAR ──────────────────────────────── -->
 <div class="card section-card" style="margin-bottom: 20px;">
     <form action="{{ url_for('documents') }}" method="GET">
-        <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 200px;">
-                <label class="form-label" style="margin-bottom: 6px;">Cari Dokumen</label>
+        <div style="display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 220px;">
+                <label class="form-label" style="margin-bottom: 8px;"><i class="bi bi-search" style="margin-right: 6px;"></i>Cari Dokumen</label>
                 <div class="search-bar">
                     <i class="bi bi-search"></i>
                     <input type="text" class="form-control" name="search"
-                           placeholder="Nama file..." value="{{ request.args.get('search', '') }}">
+                           placeholder="Masukkan nama file..." value="{{ request.args.get('search', '') }}">
                 </div>
             </div>
-            <div style="min-width: 180px;">
-                <label class="form-label" style="margin-bottom: 6px;">Kategori</label>
+            <div style="min-width: 200px;">
+                <label class="form-label" style="margin-bottom: 8px;"><i class="bi bi-funnel" style="margin-right: 6px;"></i>Kategori</label>
                 <div class="select-wrapper">
                     <select class="form-select" name="category">
                         <option value="">Semua Kategori</option>
@@ -35,12 +35,12 @@
                     <i class="bi bi-chevron-down"></i>
                 </div>
             </div>
-            <div>
-                <button type="submit" class="btn btn-primary" style="height: 42px; margin-top: 2px;">
+            <div style="display: flex; gap: 8px;">
+                <button type="submit" class="btn btn-primary" style="height: 44px; margin-top: 2px;">
                     <i class="bi bi-funnel-fill"></i> Filter
                 </button>
                 {% if request.args.get('search') or request.args.get('category') %}
-                <a href="{{ url_for('documents') }}" class="btn" style="height: 42px; margin-top: 2px; background: #f1f5f9; color: #64748b;">
+                <a href="{{ url_for('documents') }}" class="btn" style="height: 44px; margin-top: 2px; background: #1e293b; color: #94a3b8; border: 1.5px solid var(--border);">
                     <i class="bi bi-x-lg"></i> Reset
                 </a>
                 {% endif %}
@@ -52,14 +52,14 @@
 <!-- ── DOCUMENTS TABLE ─────────────────────────── -->
 <div class="card section-card">
     {% if files %}
-    <div style="overflow-x: auto;">
+    <div style="overflow-x: auto; border-radius: 12px;">
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Nama Dokumen</th>
-                    <th>Kategori</th>
-                    <th>Ukuran</th>
-                    <th>Tanggal Upload</th>
+                    <th style="text-align: left;">Nama Dokumen</th>
+                    <th style="text-align: center;">Kategori</th>
+                    <th style="text-align: right;">Ukuran</th>
+                    <th style="text-align: center;">Tanggal Upload</th>
                     <th style="text-align: center;">Aksi</th>
                 </tr>
             </thead>
@@ -67,34 +67,34 @@
                 {% for file in files %}
                 <tr>
                     <td>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <i class="bi bi-file-earmark-fill" style="color: #94a3b8; font-size: 15px; flex-shrink: 0;"></i>
-                            <span class="text-truncate fw-medium" style="max-width: 280px;" title="{{ file.filename }}">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="bi bi-file-earmark-fill" style="color: #94a3b8; font-size: 16px; flex-shrink: 0;"></i>
+                            <span class="text-truncate fw-medium" style="max-width: 300px;" title="{{ file.filename }}">
                                 {{ file.filename }}
                             </span>
                         </div>
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                         <span class="badge-cat badge-{{ file.category | lower }}">{{ file.category }}</span>
                     </td>
-                    <td style="color: var(--text-muted); font-size: 13px;">
+                    <td style="color: var(--text-muted); font-size: 13px; text-align: right; font-weight: 500;">
                         {{ (file.size / 1024) | round(1) }} KB
                     </td>
-                    <td style="color: var(--text-muted); font-size: 13px;">
+                    <td style="color: var(--text-muted); font-size: 13px; text-align: center; font-weight: 500;">
                         {{ file.last_modified.strftime('%d %b %Y, %H:%M') }}
                     </td>
                     <td>
                         <div style="display: flex; gap: 6px; justify-content: center;">
-                            <a href="{{ url_for('download', s3_key=file.key) }}" class="btn btn-success btn-sm">
+                            <a href="{{ url_for('download', s3_key=file.key) }}" class="btn btn-success btn-sm" title="Unduh file">
                                 <i class="bi bi-download"></i> Unduh
                             </a>
-                            <a href="{{ url_for('edit', s3_key=file.key) }}" class="btn btn-secondary btn-sm">
-                                <i class="bi bi-pencil-square"></i> Edit
+                            <a href="{{ url_for('edit', s3_key=file.key) }}" class="btn btn-secondary btn-sm" title="Edit metadata">
+                                <i class="bi bi-pencil-square"></i>
                             </a>
-                            <form action="{{ url_for('delete', s3_key=file.key) }}" method="POST"
-                                  onsubmit="return confirm('Hapus dokumen \'{{ file.filename }}\' dari cloud?');">
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i> Hapus
+                            <form action="{{ url_for('delete', s3_key=file.key) }}" method="POST" style="display: inline;"
+                                  onsubmit="return confirm('Hapus dokumen &quot;{{ file.filename }}&quot; dari cloud?');">
+                                <button type="submit" class="btn btn-danger btn-sm" title="Hapus file">
+                                    <i class="bi bi-trash3"></i>
                                 </button>
                             </form>
                         </div>
@@ -105,8 +105,8 @@
         </table>
     </div>
 
-    <div style="margin-top: 14px; font-size: 12px; color: var(--text-muted);">
-        Menampilkan <strong>{{ files | length }}</strong> dokumen
+    <div style="margin-top: 16px; font-size: 13px; color: var(--text-muted); font-weight: 500;">
+        <i class="bi bi-info-circle" style="margin-right: 6px;"></i>Menampilkan <strong>{{ files | length }}</strong> dokumen
     </div>
 
     {% else %}

@@ -4,35 +4,36 @@
 <div class="topbar">
     <div>
         <div class="page-title">Edit Dokumen</div>
-        <div class="page-subtitle">Perbarui nama atau kategori dokumen yang tersimpan.</div>
+        <div class="page-subtitle">Perbarui nama atau kategori dokumen yang tersimpan</div>
     </div>
     <a href="{{ url_for('documents') }}" class="btn btn-secondary">
         <i class="bi bi-arrow-left"></i> Kembali
     </a>
 </div>
 
-<div style="max-width: 640px;">
+<div style="max-width: 640px; margin: 0 auto;">
     <div class="card section-card">
         <form action="{{ url_for('edit', s3_key=file.key) }}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label class="form-label">Nama Dokumen</label>
+                <label class="form-label"><i class="bi bi-file-earmark-text" style="margin-right: 6px;"></i>Nama Dokumen</label>
                 <input type="text" name="custom_filename" class="form-control"
                        value="{{ file.filename.rsplit('.', 1)[0] if '.' in file.filename else file.filename }}" maxlength="120">
                 <div class="form-hint">
                     Nama baru akan menyimpan ekstensi lama secara otomatis.
                     {% if '.' in file.filename %}
-                        Ekstensi saat ini: <strong>.{{ file.filename.rsplit('.', 1)[1] }}</strong>
+                        Ekstensi saat ini: <strong style="color: #6366f1;"> .{{ file.filename.rsplit('.', 1)[1] }}</strong>
                     {% endif %}
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label">Unggah File Baru (opsional)</label>
+                <label class="form-label"><i class="bi bi-cloud-arrow-up" style="margin-right: 6px;"></i>Unggah File Baru (opsional)</label>
                 <input type="file" name="document_file" class="form-control" accept=".pdf,.docx,.xlsx,.pptx,.jpg,.jpeg,.png,.zip">
                 <div class="form-hint">Jika file baru diunggah, konten lama akan diganti.</div>
             </div>
 
             <div class="form-group">
+                <label class="form-label"><i class="bi bi-folder-plus" style="margin-right: 6px;"></i>Kategori</label>
                 <div class="select-wrapper">
                     <select class="form-select" name="category" required>
                         {% for cat in categories %}
@@ -44,13 +45,19 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">Lokasi File</label>
-                <input type="text" class="form-control" value="{{ file.key }}" disabled>
+                <label class="form-label"><i class="bi bi-link-45deg" style="margin-right: 6px;"></i>Lokasi File</label>
+                <input type="text" class="form-control" value="{{ file.key }}" disabled style="background: rgba(255,255,255,0.03); color: #64748b;">
+                <div class="form-hint">ID file tidak bisa diubah</div>
             </div>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px 0; font-size: 14px;">
-                <i class="bi bi-pencil-square"></i> Simpan Perubahan
-            </button>
+            <div style="display: flex; gap: 10px; margin-top: 24px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center; padding: 12px 0; font-size: 14px;">
+                    <i class="bi bi-pencil-square"></i> Simpan Perubahan
+                </button>
+                <a href="{{ url_for('documents') }}" class="btn btn-secondary" style="flex: 1; justify-content: center; padding: 12px 0; font-size: 14px;">
+                    <i class="bi bi-x-lg"></i> Batal
+                </a>
+            </div>
         </form>
     </div>
 </div>
