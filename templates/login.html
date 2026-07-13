@@ -44,51 +44,47 @@
             overflow: hidden;
         }
 
-        /* Background decoration */
+        /* Background decoration with animated gradients */
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            left: -25%;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            inset: 0;
+            background: 
+                radial-gradient(circle 600px at 20% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+                radial-gradient(circle 500px at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle 400px at 40% 10%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
             pointer-events: none;
-            animation: float 8s ease-in-out infinite;
+            animation: drift 20s ease-in-out infinite;
         }
 
         body::after {
             content: '';
             position: fixed;
-            bottom: -40%;
-            right: -20%;
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
-            pointer-events: none;
-            animation: float 10s ease-in-out infinite reverse;
-        }
-
-        body {
+            inset: 0;
             background-image: 
-                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><defs><pattern id="org-pattern" x="0" y="0" width="300" height="300" patternUnits="userSpaceOnUse"><g opacity="0.08"><circle cx="75" cy="75" r="5" fill="rgba(99,102,241,0.4)"/><circle cx="225" cy="75" r="5" fill="rgba(99,102,241,0.4)"/><circle cx="150" cy="150" r="5" fill="rgba(139,92,246,0.4)"/><circle cx="75" cy="225" r="5" fill="rgba(99,102,241,0.4)"/><circle cx="225" cy="225" r="5" fill="rgba(99,102,241,0.4)"/><line x1="75" y1="75" x2="225" y2="75" stroke="rgba(99,102,241,0.2)" stroke-width="1"/><line x1="75" y1="75" x2="150" y2="150" stroke="rgba(99,102,241,0.15)" stroke-width="1"/><line x1="225" y1="75" x2="150" y2="150" stroke="rgba(99,102,241,0.15)" stroke-width="1"/><line x1="75" y1="225" x2="150" y2="150" stroke="rgba(139,92,246,0.15)" stroke-width="1"/><line x1="225" y1="225" x2="150" y2="150" stroke="rgba(139,92,246,0.15)" stroke-width="1"/></g></pattern></defs><rect width="300" height="300" fill="url(%23org-pattern)"/></svg>');
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><pattern id="org-network" x="0" y="0" width="400" height="400" patternUnits="userSpaceOnUse"><g opacity="0.1"><circle cx="100" cy="100" r="8" fill="rgba(99,102,241,0.5)"/><circle cx="300" cy="100" r="8" fill="rgba(99,102,241,0.5)"/><circle cx="200" cy="180" r="8" fill="rgba(139,92,246,0.5)"/><circle cx="100" cy="300" r="8" fill="rgba(99,102,241,0.5)"/><circle cx="300" cy="300" r="8" fill="rgba(99,102,241,0.5)"/><line x1="100" y1="100" x2="200" y2="180" stroke="rgba(99,102,241,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/><line x1="300" y1="100" x2="200" y2="180" stroke="rgba(99,102,241,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/><line x1="100" y1="300" x2="200" y2="180" stroke="rgba(139,92,246,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/><line x1="300" y1="300" x2="200" y2="180" stroke="rgba(139,92,246,0.3)" stroke-width="1.5" stroke-dasharray="2,2"/></g></pattern></defs><rect width="400" height="400" fill="url(%23org-network)"/></svg>');
             background-attachment: fixed;
             background-repeat: repeat;
-            background-size: 300px 300px;
+            background-size: 400px 400px;
+            pointer-events: none;
+            animation: drift 20s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(20px); }
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(10px, -10px); }
         }
+
+
 
         .login-wrapper {
             width: 100%;
             max-width: 420px;
             padding: 24px;
             position: relative;
-            z-index: 1;
-            animation: fadeUp 0.6s ease;
+            z-index: 10;
+            animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes fadeUp {
@@ -118,13 +114,23 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px;
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.45);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.45), inset 0 0 20px rgba(255, 255, 255, 0.1);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .brand-logo:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 50px rgba(99, 102, 241, 0.55);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 16px 50px rgba(99, 102, 241, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.15);
         }
 
         .brand-logo i {
@@ -148,18 +154,31 @@
 
         /* Card */
         .login-card {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(99, 102, 241, 0.15);
             border-radius: 20px;
             padding: 36px 32px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(99, 102, 241, 0.05);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent 70%);
+            pointer-events: none;
         }
 
         .login-card:hover {
-            border-color: rgba(99, 102, 241, 0.2);
-            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.5);
+            border-color: rgba(99, 102, 241, 0.25);
+            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(99, 102, 241, 0.08);
         }
 
         .card-title {
@@ -168,6 +187,19 @@
             color: var(--text);
             margin-bottom: 6px;
             letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(180deg, #6366f1, #818cf8);
+            border-radius: 2px;
         }
 
         .card-sub {
@@ -175,11 +207,15 @@
             color: var(--text-muted);
             margin-bottom: 24px;
             font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         /* Form */
         .form-group {
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .form-label {
@@ -189,6 +225,9 @@
             color: #cbd5e1;
             margin-bottom: 8px;
             letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .input-wrapper {
@@ -226,12 +265,13 @@
 
         .form-control:focus {
             border-color: var(--accent);
-            background: rgba(99, 102, 241, 0.1);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            background: rgba(99, 102, 241, 0.12);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2), inset 0 0 10px rgba(99, 102, 241, 0.05);
         }
 
         .form-control:focus + .input-icon {
             color: var(--accent-light);
+            text-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
         }
 
         /* Password toggle */
@@ -270,14 +310,31 @@
             justify-content: center;
             gap: 8px;
             margin-top: 10px;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35), inset 0 0 12px rgba(255, 255, 255, 0.1);
             letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
         }
 
         .btn-login:hover {
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
             transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5), inset 0 0 12px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
         }
 
         .btn-login:active {
@@ -296,6 +353,9 @@
             margin-bottom: 20px;
             border: none;
             animation: slideDown 0.3s ease;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(4px);
         }
 
         @keyframes slideDown {
@@ -331,17 +391,20 @@
         .cred-hint {
             margin-top: 24px;
             padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1.5px solid rgba(99, 102, 241, 0.2);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(99, 102, 241, 0.04) 100%);
+            border: 1.5px solid rgba(99, 102, 241, 0.25);
             border-radius: 12px;
             font-size: 12px;
             color: var(--text-muted);
             line-height: 1.8;
             font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         .cred-hint strong {
             color: var(--accent-light);
+            font-weight: 700;
         }
 
         /* Footer */
@@ -349,8 +412,10 @@
             text-align: center;
             margin-top: 24px;
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.3);
             font-weight: 500;
+            position: relative;
+            z-index: 1;
         }
 
         /* Responsive */
@@ -412,7 +477,7 @@
             <form method="POST" action="{{ url_for('login') }}" id="loginForm">
                 <!-- Username -->
                 <div class="form-group">
-                    <label class="form-label" for="username">Username</label>
+                    <label class="form-label" for="username"><i class="bi bi-person-fill" style="color: var(--accent-light);"></i>Username</label>
                     <div class="input-wrapper">
                         <i class="bi bi-person-fill input-icon"></i>
                         <input type="text" class="form-control" id="username" name="username"
@@ -423,7 +488,7 @@
 
                 <!-- Password -->
                 <div class="form-group">
-                    <label class="form-label" for="password">Password</label>
+                    <label class="form-label" for="password"><i class="bi bi-lock-fill" style="color: var(--accent-light);"></i>Password</label>
                     <div class="input-wrapper">
                         <i class="bi bi-lock-fill input-icon"></i>
                         <input type="password" class="form-control" id="password" name="password"
